@@ -1,0 +1,60 @@
+<% content_for :page_title, "Edit Contact Info" %>
+
+<div class="max-w-3xl">
+  <%= form_with model: @contact_info, url: admin_panel_contact_info_path, method: :put, class: "space-y-6" do |form| %>
+    <% if @contact_info.errors.any? %>
+      <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+        <h3 class="font-medium">Please fix the following errors:</h3>
+        <ul class="list-disc list-inside mt-2">
+          <% @contact_info.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="bg-white shadow rounded-lg p-6 space-y-6">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <%= form.label :phone, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.telephone_field :phone, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "+256 722 222 222" %>
+        </div>
+
+        <div>
+          <%= form.label :email, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.email_field :email, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "info@olemwa.com" %>
+        </div>
+      </div>
+
+      <div>
+        <%= form.label :location, "Physical Address", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.text_area :location, rows: 3, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "Street address, City, Country" %>
+      </div>
+
+      <div class="border-t pt-6">
+        <h3 class="text-lg font-medium text-gray-900 mb-4">Social Media Links</h3>
+        
+        <div class="space-y-4">
+          <div>
+            <%= form.label :facebook_url, "Facebook", class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <%= form.url_field :facebook_url, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "https://facebook.com/olemwa" %>
+          </div>
+
+          <div>
+            <%= form.label :twitter_url, "Twitter/X", class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <%= form.url_field :twitter_url, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "https://twitter.com/olemwa" %>
+          </div>
+
+          <div>
+            <%= form.label :instagram_url, "Instagram", class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <%= form.url_field :instagram_url, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "https://instagram.com/olemwa" %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-end">
+      <%= form.submit "Update Contact Info", class: "px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md" %>
+    </div>
+  <% end %>
+</div>

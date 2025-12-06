@@ -1,0 +1,48 @@
+<%= form_with model: @admin_user, url: @admin_user.persisted? ? admin_panel_admin_path(@admin_user) : admin_panel_admins_path, class: "space-y-6" do |form| %>
+  <% if @admin_user.errors.any? %>
+    <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+      <h3 class="font-medium">Please fix the following errors:</h3>
+      <ul class="list-disc list-inside mt-2">
+        <% @admin_user.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name, class: "block text-sm font-medium text-gray-700 mb-2" %>
+    <%= form.text_field :name, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "John Doe" %>
+  </div>
+
+  <div>
+    <%= form.label :email, class: "block text-sm font-medium text-gray-700 mb-2" %>
+    <%= form.email_field :email, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "admin@example.com" %>
+  </div>
+
+  <div>
+    <%= form.label :role, class: "block text-sm font-medium text-gray-700 mb-2" %>
+    <%= form.select :role, Admin.roles.keys.map { |role| [role.titleize, role] }, {}, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+    <p class="mt-1 text-sm text-gray-500">Admins have full access to all features including user management.</p>
+  </div>
+
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <%= form.label :password, class: "block text-sm font-medium text-gray-700 mb-2" %>
+      <%= form.password_field :password, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: @admin_user.persisted? ? "Leave blank to keep current password" : "Min 6 characters" %>
+      <% unless @admin_user.persisted? %>
+        <p class="mt-1 text-sm text-gray-500">Minimum 6 characters</p>
+      <% end %>
+    </div>
+
+    <div>
+      <%= form.label :password_confirmation, class: "block text-sm font-medium text-gray-700 mb-2" %>
+      <%= form.password_field :password_confirmation, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "Confirm password" %>
+    </div>
+  </div>
+
+  <div class="flex justify-end space-x-3">
+    <%= link_to "Cancel", admin_panel_admins_path, class: "px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50" %>
+    <%= form.submit @admin_user.persisted? ? "Update Admin" : "Create Admin", class: "px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md" %>
+  </div>
+<% end %>

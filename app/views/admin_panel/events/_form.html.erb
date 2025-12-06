@@ -1,0 +1,55 @@
+<% content_for :page_title, @event.new_record? ? "New Event" : "Edit Event" %>
+
+<div class="max-w-3xl">
+  <%= form_with model: @event, url: @event.new_record? ? admin_panel_events_path : admin_panel_event_path(@event), class: "space-y-6" do |form| %>
+    <% if @event.errors.any? %>
+      <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+        <h3 class="font-medium">Please fix the following errors:</h3>
+        <ul class="list-disc list-inside mt-2">
+          <% @event.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="bg-white shadow rounded-lg p-6 space-y-6">
+      <div>
+        <%= form.label :title, class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.text_field :title, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "Event title" %>
+      </div>
+
+      <div>
+        <%= form.label :description, class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.text_area :description, rows: 6, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "Event description..." %>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <%= form.label :event_date, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.datetime_local_field :event_date, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+        </div>
+
+        <div>
+          <%= form.label :status, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.select :status, Event.statuses.keys.map { |s| [s.titleize, s] }, {}, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+        </div>
+      </div>
+
+      <div>
+        <%= form.label :location, class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.text_field :location, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "Event venue or location" %>
+      </div>
+
+      <div>
+        <%= form.label :registration_url, "Registration Link (Optional)", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.url_field :registration_url, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "https://..." %>
+      </div>
+    </div>
+
+    <div class="flex justify-between">
+      <%= link_to "Cancel", admin_panel_events_path, class: "px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50" %>
+      <%= form.submit @event.new_record? ? "Create Event" : "Update Event", class: "px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md" %>
+    </div>
+  <% end %>
+</div>

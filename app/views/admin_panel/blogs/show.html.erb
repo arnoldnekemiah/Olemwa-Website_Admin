@@ -1,0 +1,42 @@
+<% content_for :page_title, @blog.title %>
+
+<div class="mb-6">
+  <%= link_to admin_panel_blogs_path, class: "text-blue-600 hover:text-blue-800 flex items-center" do %>
+    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+    </svg>
+    Back to Blogs
+  <% end %>
+</div>
+
+<div class="bg-white rounded-lg shadow overflow-hidden">
+  <% if @blog.cover_image.attached? %>
+    <%= image_tag @blog.cover_image, class: "w-full h-64 object-cover" %>
+  <% end %>
+  
+  <div class="p-8">
+    <div class="flex items-center justify-between mb-4">
+      <span class="px-3 py-1 text-sm font-semibold rounded-full <%= @blog.published? ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' %>">
+        <%= @blog.status.titleize %>
+      </span>
+      <div class="flex space-x-2">
+        <%= link_to "Edit", edit_admin_panel_blog_path(@blog), class: "px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md" %>
+        <%= button_to "Delete", admin_panel_blog_path(@blog), method: :delete, data: { confirm: "Are you sure?" }, class: "px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md" %>
+      </div>
+    </div>
+
+    <h1 class="text-3xl font-bold mb-2"><%= @blog.title %></h1>
+    
+    <div class="flex items-center text-sm text-gray-600 mb-6">
+      <span>By <%= @blog.admin.name %></span>
+      <span class="mx-2">•</span>
+      <span><%= @blog.published_at&.strftime("%B %d, %Y") || @blog.created_at.strftime("%B %d, %Y") %></span>
+      <span class="mx-2">•</span>
+      <span class="font-mono text-xs bg-gray-100 px-2 py-1 rounded"><%= @blog.slug %></span>
+    </div>
+
+    <div class="prose max-w-none">
+      <%= simple_format(@blog.content) %>
+    </div>
+  </div>
+</div>

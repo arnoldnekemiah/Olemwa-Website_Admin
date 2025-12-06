@@ -1,0 +1,42 @@
+<% content_for :page_title, "Edit About Page" %>
+
+<div class="max-w-4xl">
+  <%= form_with model: @about_page, url: admin_panel_about_page_path, method: :put, class: "space-y-6" do |form| %>
+    <% if @about_page.errors.any? %>
+      <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+        <h3 class="font-medium">Please fix the following errors:</h3>
+        <ul class="list-disc list-inside mt-2">
+          <% @about_page.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="bg-white shadow rounded-lg p-6 space-y-6">
+      <div>
+        <%= form.label :mission, class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.text_area :mission, rows: 3, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "Club mission statement..." %>
+      </div>
+
+      <div>
+        <%= form.label :vision, class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.text_area :vision, rows: 3, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "Club vision statement..." %>
+      </div>
+
+      <div>
+        <%= form.label :history, class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.text_area :history, rows: 6, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "Club history..." %>
+      </div>
+
+      <div>
+        <%= form.label :main_content, "Main About Content", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.text_area :main_content, rows: 10, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "Main about page content..." %>
+      </div>
+    </div>
+
+    <div class="flex justify-end">
+      <%= form.submit "Update About Page", class: "px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md" %>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,56 @@
+<% content_for :page_title, @blog.new_record? ? "New Blog Post" : "Edit Blog Post" %>
+
+<div class="max-w-3xl">
+  <%= form_with model: @blog, url: @blog.new_record? ? admin_panel_blogs_path : admin_panel_blog_path(@blog), class: "space-y-6" do |form| %>
+    <% if @blog.errors.any? %>
+      <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+        <h3 class="font-medium">Please fix the following errors:</h3>
+        <ul class="list-disc list-inside mt-2">
+          <% @blog.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="bg-white shadow rounded-lg p-6 space-y-6">
+      <div>
+        <%= form.label :title, class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.text_field :title, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "Blog post title" %>
+        <p class="mt-1 text-xs text-gray-500">Slug will be auto-generated from title</p>
+      </div>
+
+      <div>
+        <%= form.label :content, class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.text_area :content, rows: 12, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "Write your blog post content..." %>
+      </div>
+
+      <div>
+        <%= form.label :cover_image, class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.file_field :cover_image, accept: "image/*", class: "block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" %>
+        <% if @blog.cover_image.attached? %>
+          <div class="mt-4">
+            <%= image_tag @blog.cover_image, class: "w-48 h-48 object-cover rounded-lg" %>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <%= form.label :status, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.select :status, Blog.statuses.keys.map { |s| [s.titleize, s] }, {}, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+        </div>
+
+        <div>
+          <%= form.label :published_at, "Publish Date", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.datetime_local_field :published_at, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-between">
+      <%= link_to "Cancel", admin_panel_blogs_path, class: "px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50" %>
+      <%= form.submit @blog.new_record? ? "Create Blog Post" : "Update Blog Post", class: "px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md" %>
+    </div>
+  <% end %>
+</div>

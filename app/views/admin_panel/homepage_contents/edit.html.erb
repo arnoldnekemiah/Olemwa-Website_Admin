@@ -1,0 +1,47 @@
+<% content_for :page_title, "Edit Homepage Content" %>
+
+<div class="max-w-4xl">
+  <%= form_with model: @homepage_content, url: admin_panel_homepage_content_path, method: :put, class: "space-y-6" do |form| %>
+    <% if @homepage_content.errors.any? %>
+      <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+        <h3 class="font-medium">Please fix the following errors:</h3>
+        <ul class="list-disc list-inside mt-2">
+          <% @homepage_content.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="bg-white shadow rounded-lg p-6 space-y-6">
+      <div>
+        <%= form.label :hero_title, "Hero Title", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.text_field :hero_title, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "Main hero title" %>
+      </div>
+
+      <div>
+        <%= form.label :hero_subtitle, "Hero Subtitle", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.text_area :hero_subtitle, rows: 2, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "Hero subtitle or tagline" %>
+      </div>
+
+      <div>
+        <%= form.label :about_snippet, "About Snippet", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.text_area :about_snippet, rows: 4, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "Brief description for homepage..." %>
+      </div>
+
+      <div>
+        <%= form.label :hero_image, "Hero Image", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.file_field :hero_image, accept: "image/*", class: "block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" %>
+        <% if @homepage_content.hero_image.attached? %>
+          <div class="mt-4">
+            <%= image_tag @homepage_content.hero_image, class: "w-full max-w-md h-48 object-cover rounded-lg" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="flex justify-end">
+      <%= form.submit "Update Homepage", class: "px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md" %>
+    </div>
+  <% end %>
+</div>
