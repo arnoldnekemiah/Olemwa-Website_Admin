@@ -1,0 +1,610 @@
+openapi: 3.0.3
+info:
+  title: Chess Club Public API
+  description: |
+    Public API for the Chess Club CMS, providing read-only access to published content.
+    
+    **Perfect for frontend applications** - All endpoints are public and require no authentication.
+    
+    ## Features
+    - 📖 Read-only access to published content
+    - 🔓 No authentication required
+    - 🌐 CORS enabled for web applications
+    - 📝 JSON responses
+    - 🖼️ Image URLs included for all media
+    
+    ## Base URL
+    Development: `http://localhost:3000`
+    
+  version: 1.0.0
+  contact:
+    name: Chess Club API Support
+    
+servers:
+  - url: http://localhost:3000
+    description: Development server
+  - url: https://api.yourchessclub.com
+    description: Production server
+
+tags:
+  - name: Projects
+    description: Published chess club projects and initiatives
+  - name: Blogs
+    description: Published blog posts and articles
+  - name: Events
+    description: Upcoming and ongoing chess events
+  - name: Leadership
+    description: Chess club leadership team profiles
+  - name: Pages
+    description: Static page content (About, Contact, Homepage)
+
+paths:
+  # Projects API
+  /api/v1/projects:
+    get:
+      tags:
+        - Projects
+      summary: Get all published projects
+      description: Retrieve a list of all published chess club projects ordered by creation date
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Project'
+              example:
+                - id: 4
+                  title: "Youth Chess Program"
+                  description: "A comprehensive program designed to introduce chess to young players aged 6-14."
+                  status: "ongoing"
+                  published: true
+                  cover_image_url: null
+                  created_at: "2025-12-06T20:36:44.588Z"
+                  updated_at: "2025-12-06T20:36:44.588Z"
+                - id: 5
+                  title: "Annual Championship Tournament"
+                  description: "Our flagship tournament attracting players from across the region."
+                  status: "ongoing"
+                  published: true
+                  cover_image_url: null
+                  created_at: "2025-12-06T20:36:44.592Z"
+                  updated_at: "2025-12-06T20:36:44.592Z"
+  
+  /api/v1/projects/{id}:
+    get:
+      tags:
+        - Projects
+      summary: Get a published project by ID
+      description: Retrieve details of a specific published project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Project ID
+          example: 4
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '404':
+          description: Project not found or not published
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # Blogs API
+  /api/v1/blogs:
+    get:
+      tags:
+        - Blogs
+      summary: Get all published blog posts
+      description: Retrieve a list of all published blog posts ordered by publication date (newest first)
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Blog'
+              example:
+                - id: 5
+                  title: "Upcoming Tournament Schedule"
+                  slug: "upcoming-tournament-schedule"
+                  content: "We're excited to announce our tournament schedule..."
+                  status: "published"
+                  published_at: "2025-11-29T20:36:44.600Z"
+                  cover_image_url: null
+                  author:
+                    id: 3
+                    name: "Mbabani Allan"
+                    email: "admin@olemwachessclub.com"
+                  created_at: "2025-12-06T20:36:44.613Z"
+                  updated_at: "2025-12-06T20:36:44.613Z"
+  
+  /api/v1/blogs/{id}:
+    get:
+      tags:
+        - Blogs
+      summary: Get a blog by ID or slug
+      description: |
+        Retrieve a specific published blog post by ID or slug.
+        
+        **Examples:**
+        - By ID: `/api/v1/blogs/5`
+        - By slug: `/api/v1/blogs/chess-strategies-for-beginners`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Blog post ID (numeric) or slug (string)
+          example: "chess-strategies-for-beginners"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Blog'
+        '404':
+          description: Blog post not found or not published
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # Events API
+  /api/v1/events:
+    get:
+      tags:
+        - Events
+      summary: Get upcoming and ongoing events
+      description: Retrieve a list of upcoming and ongoing chess events ordered by event date
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+              example:
+                - id: 4
+                  title: "Weekly Club Meeting"
+                  description: "Join us for our regular club meeting with casual games and analysis."
+                  event_date: "2025-12-13T20:36:44.623Z"
+                  location: "Chess Club Hall"
+                  registration_url: null
+                  status: "upcoming"
+                  created_at: "2025-12-06T20:36:44.624Z"
+                  updated_at: "2025-12-06T20:36:44.624Z"
+  
+  /api/v1/events/{id}:
+    get:
+      tags:
+        - Events
+      summary: Get event by ID
+      description: Retrieve details of a specific event
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Event ID
+          example: 4
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '404':
+          description: Event not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # Leadership Profiles API
+  /api/v1/leadership_profiles:
+    get:
+      tags:
+        - Leadership
+      summary: Get all leadership profiles
+      description: Retrieve all leadership team profiles ordered by position
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LeadershipProfile'
+              example:
+                - id: 4
+                  name: "John Doe"
+                  role: "President"
+                  bio: "International Master with 15 years of competitive experience."
+                  position_order: 1
+                  photo_url: null
+                  created_at: "2025-12-06T20:36:44.572Z"
+                  updated_at: "2025-12-06T20:36:44.572Z"
+
+  # Pages API
+  /api/v1/about:
+    get:
+      tags:
+        - Pages
+      summary: Get about page content
+      description: Retrieve the about page content including mission, vision, history
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AboutPage'
+              example:
+                id: 2
+                mission: "To promote excellence in chess and foster a vibrant community of chess enthusiasts."
+                vision: "To be the leading chess club inspiring strategic thinking and sportsmanship."
+                main_content: "Welcome to our Chess Club! Founded in 2020..."
+                history: "Our journey began with a small group of passionate chess players..."
+                created_at: "2025-12-06T20:36:44.559Z"
+                updated_at: "2025-12-06T20:36:44.559Z"
+
+  /api/v1/contact:
+    get:
+      tags:
+        - Pages
+      summary: Get contact information
+      description: Retrieve contact information and social media links
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactInfo'
+              example:
+                id: 2
+                phone: "+256 722 222 222"
+                email: "info@olemwa.com"
+                location: "123 Chess Avenue, Board City"
+                facebook_url: "https://facebook.com/olemwa"
+                twitter_url: "https://twitter.com/olemwa"
+                instagram_url: "https://instagram.com/olemwa"
+                created_at: "2025-12-06T20:36:44.567Z"
+                updated_at: "2025-12-06T20:36:44.567Z"
+
+  /api/v1/homepage:
+    get:
+      tags:
+        - Pages
+      summary: Get homepage content
+      description: Retrieve homepage hero section content
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HomepageContent'
+              example:
+                id: 2
+                hero_title: "Welcome to Chess Club"
+                hero_subtitle: "Join us in the pursuit of chess excellence"
+                about_snippet: "We are a community of chess enthusiasts dedicated to promoting the game."
+                created_at: "2025-12-06T20:36:44.563Z"
+                updated_at: "2025-12-06T20:36:44.563Z"
+
+components:
+  schemas:
+    Project:
+      type: object
+      required:
+        - id
+        - title
+        - status
+      properties:
+        id:
+          type: integer
+          example: 4
+        title:
+          type: string
+          example: Youth Chess Tournament
+        description:
+          type: string
+          nullable: true
+          example: Annual tournament for young chess players
+        status:
+          type: string
+          enum: [ongoing, completed]
+          example: ongoing
+        published:
+          type: boolean
+          example: true
+        cover_image_url:
+          type: string
+          format: uri
+          nullable: true
+          example: https://example.com/images/project_cover.jpg
+        created_at:
+          type: string
+          format: date-time
+          example: 2025-12-01T10:00:00Z
+        updated_at:
+          type: string
+          format: date-time
+          example: 2025-12-11T10:00:00Z
+
+    Blog:
+      type: object
+      required:
+        - id
+        - title
+        - slug
+        - status
+      properties:
+        id:
+          type: integer
+          example: 5
+        title:
+          type: string
+          example: Chess Strategies for Beginners
+        slug:
+          type: string
+          example: chess-strategies-for-beginners
+        content:
+          type: string
+          nullable: true
+          example: Learn the basic strategies to improve your chess game...
+        status:
+          type: string
+          enum: [draft, published]
+          example: published
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: 2025-12-10T10:00:00Z
+        cover_image_url:
+          type: string
+          format: uri
+          nullable: true
+          example: https://example.com/images/blog_cover.jpg
+        author:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 3
+            name:
+              type: string
+              example: Mbabani Allan
+            email:
+              type: string
+              format: email
+              example: admin@olemwachessclub.com
+        created_at:
+          type: string
+          format: date-time
+          example: 2025-12-01T10:00:00Z
+        updated_at:
+          type: string
+          format: date-time
+          example: 2025-12-11T10:00:00Z
+
+    Event:
+      type: object
+      required:
+        - id
+        - title
+        - event_date
+        - status
+      properties:
+        id:
+          type: integer
+          example: 4
+        title:
+          type: string
+          example: Chess Championship 2025
+        description:
+          type: string
+          nullable: true
+          example: Annual chess championship tournament
+        event_date:
+          type: string
+          format: date-time
+          example: 2025-06-15T14:00:00Z
+        location:
+          type: string
+          nullable: true
+          example: City Hall, Main Auditorium
+        registration_url:
+          type: string
+          format: uri
+          nullable: true
+          example: https://register.chessclub.com/event/123
+        status:
+          type: string
+          enum: [upcoming, ongoing, completed]
+          example: upcoming
+        created_at:
+          type: string
+          format: date-time
+          example: 2025-12-01T10:00:00Z
+        updated_at:
+          type: string
+          format: date-time
+          example: 2025-12-11T10:00:00Z
+
+    LeadershipProfile:
+      type: object
+      required:
+        - id
+        - name
+        - role
+      properties:
+        id:
+          type: integer
+          example: 4
+        name:
+          type: string
+          example: John Doe
+        role:
+          type: string
+          example: President
+        bio:
+          type: string
+          nullable: true
+          example: John has been playing chess for 20 years...
+        position_order:
+          type: integer
+          example: 1
+        photo_url:
+          type: string
+          format: uri
+          nullable: true
+          example: https://example.com/images/john_doe.jpg
+        created_at:
+          type: string
+          format: date-time
+          example: 2025-12-01T10:00:00Z
+        updated_at:
+          type: string
+          format: date-time
+          example: 2025-12-11T10:00:00Z
+
+    AboutPage:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: integer
+          example: 2
+        mission:
+          type: string
+          nullable: true
+          example: To promote chess excellence and strategic thinking
+        vision:
+          type: string
+          nullable: true
+          example: A world where chess is accessible to all
+        main_content:
+          type: string
+          nullable: true
+          example: Our chess club was founded in...
+        history:
+          type: string
+          nullable: true
+          example: Established in 1995...
+        created_at:
+          type: string
+          format: date-time
+          example: 2025-12-01T10:00:00Z
+        updated_at:
+          type: string
+          format: date-time
+          example: 2025-12-11T10:00:00Z
+
+    ContactInfo:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: integer
+          example: 2
+        phone:
+          type: string
+          nullable: true
+          example: "+1234567890"
+        email:
+          type: string
+          format: email
+          nullable: true
+          example: info@chessclub.com
+        location:
+          type: string
+          nullable: true
+          example: "123 Chess Street, City"
+        facebook_url:
+          type: string
+          format: uri
+          nullable: true
+          example: https://facebook.com/chessclub
+        twitter_url:
+          type: string
+          format: uri
+          nullable: true
+          example: https://twitter.com/chessclub
+        instagram_url:
+          type: string
+          format: uri
+          nullable: true
+          example: https://instagram.com/chessclub
+        created_at:
+          type: string
+          format: date-time
+          example: 2025-12-01T10:00:00Z
+        updated_at:
+          type: string
+          format: date-time
+          example: 2025-12-11T10:00:00Z
+
+    HomepageContent:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: integer
+          example: 2
+        hero_title:
+          type: string
+          nullable: true
+          example: Welcome to Our Chess Club
+        hero_subtitle:
+          type: string
+          nullable: true
+          example: Learn, Play, and Master the Game of Chess
+        about_snippet:
+          type: string
+          nullable: true
+          example: We are a community of chess enthusiasts...
+        created_at:
+          type: string
+          format: date-time
+          example: 2025-12-01T10:00:00Z
+        updated_at:
+          type: string
+          format: date-time
+          example: 2025-12-11T10:00:00Z
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Not Found
+        message:
+          type: string
+          example: The requested resource could not be found

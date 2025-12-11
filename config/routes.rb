@@ -15,6 +15,21 @@ Rails.application.routes.draw do
     resources :admins
   end
   
+  # Public API Routes
+  namespace :api do
+    namespace :v1 do
+      resources :projects, only: [:index, :show]
+      resources :blogs, only: [:index, :show]
+      resources :events, only: [:index, :show]
+      resources :leadership_profiles, only: [:index]
+      
+      # Page content endpoints
+      get 'about', to: 'pages#about'
+      get 'contact', to: 'pages#contact'
+      get 'homepage', to: 'pages#homepage'
+    end
+  end
+  
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
